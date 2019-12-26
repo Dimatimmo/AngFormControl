@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
   fullNameControl: FormGroup;
   userListControl: FormGroup;
   ngOnInit(){
-    this.nameControl = new FormControl('Vasya', [validatorLength(5), requiredValidator ]);
+    this.nameControl = new FormControl('Vasya', [validatorLength(5), requiredValidator]);
     this.nameControl.valueChanges.subscribe((value) => console.log(value));
     this.nameControl.statusChanges.subscribe((status) => {
       console.log(this.nameControl.errors);
@@ -30,19 +30,24 @@ export class AppComponent implements OnInit {
 
     this.userListControl = new FormGroup({
       users: new FormArray([
-        new FormControl('Dima'),
-        new FormControl('Marina')
+        new FormControl('Dima', [validatorLength(5), requiredValidator]),
+        new FormControl('Marina', [validatorLength(5), requiredValidator])
       ])
     });
 
-    this.userListControl.valueChanges.subscribe((value) => console.log(value));
+    this.userListControl.controls['users'].valueChanges.subscribe((value) => console.log(value));
+    this.userListControl.controls['users'].statusChanges.subscribe((status) => {
+      console.log(this.userListControl.controls['users'].errors);
+      console.log(status);
+    });
+
   }
   removeUserControl(index) {
     (this.userListControl.controls['users'] as FormArray).removeAt(index);
   }
 
   addUserControl(index) {
-    (this.userListControl.controls['users'] as FormArray).push(new FormControl(''));
+    (this.userListControl.controls['users'] as FormArray).push(new FormControl('', [validatorLength(5), requiredValidator]));
   }
 }
 function validatorLength (number) {

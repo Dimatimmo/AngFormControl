@@ -2,6 +2,9 @@
 <div *ngIf="nameControl.errors">
   <p>{{nameControl.errors.myValidator.message}}</p>
 </div>
+<div *ngIf="userListControl.errors">
+  <p>{{userListControl}}</p>
+</div>
 
 <fieldset [formGroup]="fullNameControl">
   <input formControlName="firstName">
