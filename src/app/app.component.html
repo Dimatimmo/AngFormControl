@@ -1,0 +1,20 @@
+<input [formControl] ="nameControl">
+<div *ngIf="nameControl.errors">
+  <p>{{nameControl.errors.myValidator.message}}</p>
+</div>
+
+<fieldset [formGroup]="fullNameControl">
+  <input formControlName="firstName">
+  <input formControlName="lastName">
+</fieldset>
+
+<button (click)="addUserControl()">Add new form</button>
+<form [formGroup]="userListControl">
+  <ul formArrayName="users">
+    <li *ngFor="let userControl of userListControl.controls.users.controls; let i = index">
+        <input formControlName="{{i}}">
+        <button (click)="removeUserControl(i)">Remove</button>
+    </li>
+  </ul>
+</form>
+<router-outlet></router-outlet>

@@ -1,0 +1,63 @@
+import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators, FormGroup, FormArray } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+  title = 'formcontrol';
+  nameControl: FormControl;
+  fullNameControl: FormGroup;
+  userListControl: FormGroup;
+  ngOnInit(){
+    this.nameControl = new FormControl('Vasya', [validatorLength(5), requiredValidator ]);
+    this.nameControl.valueChanges.subscribe((value) => console.log(value));
+    this.nameControl.statusChanges.subscribe((status) => {
+      console.log(this.nameControl.errors);
+      console.log(status);
+    });
+
+    this.fullNameControl = new FormGroup({
+      firstName: new FormControl(),
+      lastName: new FormControl()
+    })
+
+    this.fullNameControl.valueChanges.subscribe((value) => console.log(value));
+
+    this.userListControl = new FormGroup({
+      users: new FormArray([
+        new FormControl('Dima'),
+        new FormControl('Marina')
+      ])
+    });
+
+    this.userListControl.valueChanges.subscribe((value) => console.log(value));
+  }
+  removeUserControl(index) {
+    (this.userListControl.controls['users'] as FormArray).removeAt(index);
+  }
+
+  addUserControl(index) {
+    (this.userListControl.controls['users'] as FormArray).push(new FormControl(''));
+  }
+}
+function validatorLength (number) {
+  return function  (formControl: FormControl) {
+    if(formControl.value.length < number) {
+      return { myValidator: { message: `Сообщение должно быть длиннее  ${number} символов`} };
+    }
+    return null;
+  }
+}
+
+function requiredValidator (formControl: FormControl) {
+  if(!formControl.value.length) {
+    return { myValidator: { message: 'Введите сообщение'} };
+  }
+  return null;
+}
+
